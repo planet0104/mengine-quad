@@ -27,6 +27,10 @@ impl ScrollingBackground {
             layer.update();
         }
     }
+
+    pub fn layers(&mut self) -> &mut [BackgroundLayer]{
+        &mut self.layers
+    }
 }
 
 #[derive(Clone, Debug, Copy)]
@@ -58,21 +62,21 @@ impl BackgroundLayer {
         match self.direction {
             ScrollDir::Up => {
                 // Move the layer up (slide the viewport down)
-                self.viewport.offset(vec2(0., self.speed));
+                self.viewport = self.viewport.offset(vec2(0., self.speed));
                 if self.viewport.top() > self.height() as f32 {
                     self.viewport.move_to(vec2(self.viewport.left(), 0.));
                 }
             }
 
             ScrollDir::Right => {
-                self.viewport.offset(vec2(-self.speed, 0.));
+                self.viewport = self.viewport.offset(vec2(-self.speed, 0.));
                 if self.viewport.right() < 0.0 {
                     self.viewport.move_to(vec2(self.width() as f32 - (self.viewport.right() - self.viewport.left()), self.viewport.top()));
                 }
             }
 
             ScrollDir::Down => {
-                self.viewport.offset(vec2(0., -self.speed));
+                self.viewport = self.viewport.offset(vec2(0., -self.speed));
                 if self.viewport.bottom() < 0.0 {
                     self.viewport.move_to(vec2(self.viewport.left(), self.height() as f32 - (self.viewport.bottom() - self.viewport.top())))
                 }
@@ -80,7 +84,7 @@ impl BackgroundLayer {
 
             ScrollDir::Left => {
                 // Move the layer left (slide the viewport right)
-                self.viewport.offset(vec2(self.speed, 0.));
+                self.viewport = self.viewport.offset(vec2(self.speed, 0.));
                 if self.viewport.left() > self.width() as f32 {
                     self.viewport.move_to(vec2(0., self.viewport.top()))
                 }

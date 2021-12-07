@@ -14,6 +14,7 @@ pub const BA_STOP: BOUNDSACTION = 0;
 pub const BA_WRAP: BOUNDSACTION = 1;
 pub const BA_BOUNCE: BOUNDSACTION = 2;
 pub const BA_DIE: BOUNDSACTION = 3;
+pub const BA_NONE: BOUNDSACTION = 4;
 
 pub trait SpriteExt {
     fn add_sprite(&self, sprite: &Sprite) -> Sprite;
@@ -37,6 +38,14 @@ impl Resource {
         match &self {
             &Resource::Animation(anim) => anim.frame_width(),
             &Resource::Static(image) => image.width() as f32,
+        }
+    }
+
+    pub fn amination_mut<'a>(&'a mut self) -> Option<&'a mut Animation>{
+        if let Resource::Animation(anim) = self{
+            Some(anim)
+        }else{
+            None
         }
     }
 }
@@ -212,7 +221,7 @@ impl Sprite {
             }
         }
         // Stop (default)
-        else {
+        else if self.bounds_action == BA_STOP {
             if new_position.x < self.bounds.left()
                 || new_position.x > (self.bounds.right() - sprite_size.x)
             {
@@ -325,6 +334,10 @@ impl Sprite {
 
     pub fn resource(&self) -> &Resource {
         &self.resource
+    }
+
+    pub fn resource_mut(&mut self) -> &mut Resource {
+        &mut self.resource
     }
 
     pub fn position(&self) -> &Rect {

@@ -1,14 +1,14 @@
 pub mod graphics;
 pub mod engine;
 use graphics::{Transform, draw_text};
-use macroquad::{prelude::{Texture2D, rand, Rect, screen_width, screen_height, Color, Vec2, BLACK, draw_rectangle, vec2, get_fps, next_frame}, miniquad::date, camera::{set_camera, set_default_camera, Camera2D}};
+use macroquad::{prelude::{Texture2D, rand, Rect, screen_width, screen_height, Color, Vec2, BLACK, draw_rectangle, vec2, get_fps, next_frame, KeyCode}, miniquad::date, camera::{set_camera, set_default_camera, Camera2D}};
 
 #[derive(Debug)]
 pub enum Event {
     MouseMove(f32, f32),
     Click(f32, f32),
-    KeyDown(String),
-    KeyUp(String),
+    KeyDown(KeyCode),
+    KeyUp(KeyCode),
 }
 
 //计时器
@@ -91,6 +91,23 @@ impl Animation {
         let mut anim = Self::new(image, frames, fps);
         anim.start();
         anim
+    }
+
+    pub fn set_current_frame(&mut self, frame: usize) -> bool{
+        if frame < self.frames.len(){
+            self.current = frame as i32;
+            true
+        }else{
+            false
+        }
+    }
+
+    pub fn current_frame(&self) -> usize{
+        if self.current <= 0{
+            0
+        }else{
+            self.current as usize
+        }
     }
 
     pub fn frame_width(&self) -> f32 {
