@@ -2,8 +2,12 @@
 
 run on pc:
 
-> cargo run --release
+```bash
+cargo run --release
+```
 
 run in browser:
 
-> run_web.cmd
+```bash
+run_web.cmd
+```
