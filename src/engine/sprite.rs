@@ -387,4 +387,8 @@ impl Sprite {
     pub fn set_name<T: Into<String>>(&mut self, name: T){
         self.name = name.into();
     }
+
+    pub fn set_bounds_action(&mut self, bounds_action: BOUNDSACTION){
+        self.bounds_action = bounds_action;
+    }
 }
