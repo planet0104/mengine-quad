@@ -101,286 +101,287 @@ impl BackgroundLayer {
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     self.width() as f32 + self.viewport.left(),
                     self.height() as f32 + self.viewport.top(), //图像源左上角
                     -self.viewport.left(),
                     -self.viewport.top(),
-                ]), //图像源宽高
-                Some([
+                )), //图像源宽高
+                Some(Rect::new(
                     x,
                     y, //目标绘制坐标
                     -self.viewport.left(),
                     -self.viewport.top(),
-                ]),
+                )),
             );
             //绘制右上部分(对应图片左下部分)
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     0.0,
                     self.height() as f32 + self.viewport.top(),
-                    -self.viewport.right(),
+                    self.viewport.right(),
                     -self.viewport.top(),
-                ]),
-                Some([
+                )),
+                Some(Rect::new(
                     x - self.viewport.left(),
                     y,
-                    -self.viewport.right(),
+                    self.viewport.right(),
                     -self.viewport.top(),
-                ]),
+                )),
             );
+
             //绘制左下部分(对应图片右上部分)
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     self.width() as f32 + self.viewport.left(),
                     0.0,
                     -self.viewport.left(),
                     self.viewport.bottom(),
-                ]),
-                Some([
+                )),
+                Some(Rect::new(
                     x,
                     y - self.viewport.top(),
                     -self.viewport.left(),
                     self.viewport.bottom(),
-                ]),
+                )),
             );
             //绘制右下部分(对应图片左上部分)
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([0.0, 0.0, self.viewport.right(), self.viewport.bottom()]),
-                Some([
+                Some(Rect::new(0.0, 0.0, self.viewport.right(), self.viewport.bottom())),
+                Some(Rect::new(
                     x - self.viewport.left(),
                     y - self.viewport.top(),
                     self.viewport.right(),
                     self.viewport.bottom(),
-                ]),
+                )),
             );
         } else if self.viewport.top() < 0.0 && self.viewport.right() > self.width() as f32 {
             //绘制拆开的视口，从顶部环绕到底部，从右侧环绕到左侧
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     self.viewport.left(),
                     self.height() as f32 + self.viewport.top(),
                     self.width() as f32 - self.viewport.left(),
                     -self.viewport.top(),
-                ]),
-                Some([x, y, self.width() as f32 - self.viewport.left(), -self.viewport.top()]),
+                )),
+                Some(Rect::new(x, y, self.width() as f32 - self.viewport.left(), -self.viewport.top())),
             );
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     0.0,
                     self.height() as f32 + self.viewport.top(),
                     self.viewport.right() - self.width() as f32,
                     -self.viewport.top(),
-                ]),
-                Some([
+                )),
+                Some(Rect::new(
                     x + (self.width() as f32 - self.viewport.left()),
                     y,
                     self.viewport.right() - self.width() as f32,
                     -self.viewport.top(),
-                ]),
+                )),
             );
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     self.viewport.left(),
                     0.0,
                     self.width() as f32 - self.viewport.left(),
                     self.viewport.bottom(),
-                ]),
-                Some([
+                )),
+                Some(Rect::new(
                     x,
                     y - self.viewport.top(),
                     self.width() as f32 - self.viewport.left(),
                     self.viewport.bottom(),
-                ]),
+                )),
             );
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     0.0,
                     0.0,
                     self.viewport.right() - self.width() as f32,
                     self.viewport.bottom(),
-                ]),
-                Some([
+                )),
+                Some(Rect::new(
                     x + (self.width() as f32 - self.viewport.left()),
                     y - self.viewport.top(),
                     self.viewport.right() - self.width() as f32,
                     self.viewport.bottom(),
-                ]),
+                )),
             );
         } else if self.viewport.bottom() > self.height() as f32 && self.viewport.left() < 0.0 {
             //绘制拆开的视口，从底部环绕到顶部，从左侧环绕到右侧
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     self.width() as f32 + self.viewport.left(),
                     self.viewport.top(),
                     -self.viewport.left(),
                     self.height() as f32 - self.viewport.top(),
-                ]),
-                Some([x, y, -self.viewport.left(), self.height() as f32 - self.viewport.top()]),
+                )),
+                Some(Rect::new(x, y, -self.viewport.left(), self.height() as f32 - self.viewport.top())),
             );
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     0.0,
                     self.viewport.top(),
                     self.viewport.right(),
                     self.height() as f32 - self.viewport.top(),
-                ]),
-                Some([
+                )),
+                Some(Rect::new(
                     x - self.viewport.left(),
                     y,
                     self.viewport.right(),
                     self.height() as f32 - self.viewport.top(),
-                ]),
+                )),
             );
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     self.width() as f32 + self.viewport.left(),
                     0.0,
                     -self.viewport.left(),
                     self.viewport.bottom() - self.height() as f32,
-                ]),
-                Some([
+                )),
+                Some(Rect::new(
                     x,
                     y + (self.height() as f32 - self.viewport.top()),
                     -self.viewport.left(),
                     self.viewport.bottom() - self.height() as f32,
-                ]),
+                )),
             );
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     0.0,
                     0.0,
                     self.viewport.right(),
                     self.viewport.bottom() - self.height() as f32,
-                ]),
-                Some([
+                )),
+                Some(Rect::new(
                     x - self.viewport.left(),
                     y + (self.height() as f32 - self.viewport.top()),
                     self.viewport.right(),
                     self.viewport.bottom() - self.height() as f32,
-                ]),
+                )),
             );
         } else if self.viewport.bottom() > self.height() as f32 && self.viewport.right() > self.width() as f32 {
             //绘制所有窗口，从底部环绕到顶部，从右侧环绕到左侧
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     self.viewport.left(),
                     self.viewport.top(),
                     self.width() as f32 - self.viewport.left(),
                     self.height() as f32 - self.viewport.top(),
-                ]),
-                Some([
+                )),
+                Some(Rect::new(
                     x,
                     y,
                     self.width() as f32 - self.viewport.left(),
                     self.height() as f32 - self.viewport.top(),
-                ]),
+                )),
             );
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     0.0,
                     self.viewport.top(),
                     self.viewport.right() - self.width() as f32,
                     self.height() as f32 - self.viewport.top(),
-                ]),
-                Some([
+                )),
+                Some(Rect::new(
                     x + (self.width() as f32 - self.viewport.left()),
                     y,
                     self.viewport.right() - self.width() as f32,
                     self.height() as f32 - self.viewport.top(),
-                ]),
+                )),
             );
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     self.viewport.left(),
                     0.0,
                     self.width() as f32 - self.viewport.left(),
                     self.viewport.bottom() - self.height() as f32,
-                ]),
-                Some([
+                )),
+                Some(Rect::new(
                     x,
                     y + (self.height() as f32 - self.viewport.top()),
                     self.width() as f32 - self.viewport.left(),
                     self.viewport.bottom() - self.height() as f32,
-                ]),
+                )),
             );
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     0.0,
                     0.0,
                     self.viewport.right() - self.width() as f32,
                     self.viewport.bottom() - self.height() as f32,
-                ]),
-                Some([
+                )),
+                Some(Rect::new(
                     x + (self.width() as f32 - self.viewport.left()),
                     y + (self.height() as f32 - self.viewport.top()),
                     self.viewport.right() - self.width() as f32,
                     self.viewport.bottom() - self.height() as f32,
-                ]),
+                )),
             );
         } else if self.viewport.top() < 0.0 {
             //绘制拆开的视口，从顶部环绕到底部
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     self.viewport.left(),
                     self.height() as f32 + self.viewport.top(), //srcx, srcY
                     self.viewport.right() - self.viewport.left(),
                     -self.viewport.top(),
-                ]), //width, height
-                Some([
+                )), //width, height
+                Some(Rect::new(
                     x,
                     y, //destX, destY
                     self.viewport.right() - self.viewport.left(),
                     -self.viewport.top(),
-                ]),
+                )),
             );
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     self.viewport.left(),
                     0.0, //srcX, srcY
                     self.viewport.right() - self.viewport.left(),
                     self.viewport.bottom(),
-                ]),
-                Some([
+                )),
+                Some(Rect::new(
                     x,
                     y - self.viewport.top(), //destX, destY
                     self.viewport.right() - self.viewport.left(),
                     self.viewport.bottom(),
-                ]),
+                )),
             );
         } else if self.viewport.right() > self.width() as f32 {
             //绘制拆开的视口，从右侧环绕到左侧
@@ -390,112 +391,112 @@ impl BackgroundLayer {
                 graphics::draw_image(
                     None,
                     self.bitmap,
-                    Some([self.viewport.left(), self.viewport.top(), w, h]),
-                    Some([x, y, w, h]),
+                    Some(Rect::new(self.viewport.left(), self.viewport.top(), w, h)),
+                    Some(Rect::new(x, y, w, h)),
                 );
             }
 
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     0.0,
                     self.viewport.top(),
                     self.viewport.right() - self.width() as f32,
                     self.viewport.bottom() - self.viewport.top(),
-                ]),
-                Some([
+                )),
+                Some(Rect::new(
                     x + (self.width() as f32 - self.viewport.left()),
                     y,
                     self.viewport.right() - self.width() as f32,
                     self.viewport.bottom() - self.viewport.top(),
-                ]),
+                )),
             );
         } else if self.viewport.bottom() > self.height() as f32 {
             //绘制拆开的窗口，从底部环绕到顶部
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     self.viewport.left(),
                     self.viewport.top(),
                     self.viewport.right() - self.viewport.left(),
                     self.height() as f32 - self.viewport.top(),
-                ]),
-                Some([
+                )),
+                Some(Rect::new(
                     x,
                     y,
                     self.viewport.right() - self.viewport.left(),
                     self.height() as f32 - self.viewport.top(),
-                ]),
+                )),
             );
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     self.viewport.left(),
                     0.0,
                     self.viewport.right() - self.viewport.left(),
                     self.viewport.bottom() - self.height() as f32,
-                ]),
-                Some([
+                )),
+                Some(Rect::new(
                     x,
                     y + (self.height() as f32 - self.viewport.top()),
                     self.viewport.right() - self.viewport.left(),
                     self.viewport.bottom() - self.height() as f32,
-                ]),
+                )),
             );
         } else if self.viewport.left() < 0.0 {
             //绘制拆开的视口，从左侧环绕到右侧
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     self.width() as f32 + self.viewport.left(),
                     self.viewport.top(),
                     -self.viewport.left(),
                     self.viewport.bottom() - self.viewport.top(),
-                ]),
-                Some([
+                )),
+                Some(Rect::new(
                     x,
                     y,
                     -self.viewport.left(),
                     self.viewport.bottom() - self.viewport.top(),
-                ]),
+                )),
             );
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     0.0,
                     self.viewport.top(),
                     self.viewport.right(),
                     self.viewport.bottom() - self.viewport.top(),
-                ]),
-                Some([
+                )),
+                Some(Rect::new(
                     x - self.viewport.left(),
                     y,
                     self.viewport.right(),
                     self.viewport.bottom() - self.viewport.top(),
-                ]),
+                )),
             );
         } else {
             //一次性绘制整个视口
             graphics::draw_image(
                 None,
                 self.bitmap,
-                Some([
+                Some(Rect::new(
                     self.viewport.left(),
                     self.viewport.top(),
                     self.viewport.right() - self.viewport.left(),
                     self.viewport.bottom() - self.viewport.top(),
-                ]),
-                Some([
+                )),
+                Some(Rect::new(
                     x,
                     y,
                     self.viewport.right() - self.viewport.left(),
                     self.viewport.bottom() - self.viewport.top(),
-                ]),
+                )),
             );
         }
     }

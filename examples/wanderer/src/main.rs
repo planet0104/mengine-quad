@@ -45,7 +45,7 @@ impl State for Game{
         self.update_sprites();
         // self.background.update();
         // self.foreground.update();
-
+        
         if is_key_pressed(KeyCode::Left){
             self.drive(ScrollDir::Left)
         }else if is_key_pressed(KeyCode::Right){
@@ -99,7 +99,16 @@ impl GameEngine for Game{
     }
 }
 
-#[macroquad::main("Aliens")]
+fn window_conf() -> Conf {
+    Conf {
+        window_title: "Aliens".to_owned(),
+        window_width: 250,
+        window_height: 150,
+        ..Default::default()
+    }
+}
+
+#[macroquad::main(window_conf)]
 async fn main() -> Result<()> {
     
     clear_background(WHITE);
@@ -136,8 +145,8 @@ async fn main() -> Result<()> {
     
 
     let frames = vec![
-        [0., 0., 26., 32.],
-        [0., 32., 26., 32.]
+        Rect::new(0., 0., 26., 32.),
+        Rect::new(0., 32., 26., 32.)
     ];
 
     let mut anim =

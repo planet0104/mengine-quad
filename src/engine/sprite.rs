@@ -264,12 +264,12 @@ impl Sprite {
         // Draw the sprite if it isn't hidden
         if !self.hidden {
             // Draw the appropriate frame, if necessary
-            let dest = [
+            let dest = Rect::new(
                 self.position.left() as f32,
                 self.position.top() as f32,
                 self.resource.width(),
                 self.resource.height(),
-            ];
+            );
             match &self.resource {
                 Resource::Animation(anim) => anim.draw(None, dest),
                 Resource::Static(image) => graphics::draw_image(None, image.clone(), None, Some(dest)),

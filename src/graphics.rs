@@ -16,22 +16,20 @@ impl Default for Transform {
 pub fn draw_image(
     transform: Option<Transform>,
     image: Texture2D,
-    src: Option<[f32; 4]>,
-    dest: Option<[f32; 4]>,
+    source: Option<Rect>,
+    dest: Option<Rect>,
 ) {
 
-    if src.is_some() || dest.is_some(){
+    if source.is_some() || dest.is_some(){
         let mut params = DrawTextureParams::default();
 
-        if let Some(src) = src{
-            params.source.replace(Rect::new(src[0], src[1], src[2], src[3]));
-        }
+        params.source = source;
         let mut x = 0.;
         let mut y = 0.;
         if let Some(dest) = dest{
-            x = dest[0];
-            y = dest[1];
-            params.dest_size = Some(vec2(dest[2], dest[3]));
+            x = dest.x;
+            y = dest.y;
+            params.dest_size = Some(vec2(dest.w, dest.h));
         }
         if let Some(transform) = transform{
             if transform.rotate != 0.{

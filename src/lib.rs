@@ -48,15 +48,15 @@ impl AnimationTimer {
 
 pub struct SubImage {
     image: Texture2D,
-    region: [f32; 4],
+    region: Rect,
 }
 
 impl SubImage {
-    pub fn new(image: Texture2D, region: [f32; 4]) -> SubImage {
+    pub fn new(image: Texture2D, region: Rect) -> SubImage {
         SubImage { image, region }
     }
 
-    pub fn draw(&self, transform: Option<Transform>, dest: [f32; 4]) {
+    pub fn draw(&self, transform: Option<Transform>, dest: Rect) {
         graphics::draw_image(transform, self.image, Some(self.region), Some(dest));
     }
 }
@@ -65,16 +65,16 @@ impl SubImage {
 pub struct Animation {
     timer: AnimationTimer,
     image: Texture2D,
-    frames: Vec<[f32; 4]>,
+    frames: Vec<Rect>,
     current: i32,
     repeat: bool,
     active: bool,
     end: bool, //current == frames.len()
-    pub position: Option<[f32; 4]>,
+    pub position: Option<Rect>,
 }
 
 impl Animation {
-    pub fn new(image: Texture2D, frames: Vec<[f32; 4]>, fps: f64) -> Animation {
+    pub fn new(image: Texture2D, frames: Vec<Rect>, fps: f64) -> Animation {
         Animation {
             timer: AnimationTimer::new(fps),
             image,
@@ -87,7 +87,7 @@ impl Animation {
         }
     }
 
-    pub fn active(image: Texture2D, frames: Vec<[f32; 4]>, fps: f64) -> Animation {
+    pub fn active(image: Texture2D, frames: Vec<Rect>, fps: f64) -> Animation {
         let mut anim = Self::new(image, frames, fps);
         anim.start();
         anim
@@ -114,7 +114,7 @@ impl Animation {
         if self.frames.len() == 0 {
             0.0
         } else {
-            self.frames[0][2]
+            self.frames[0].w
         }
     }
 
@@ -122,7 +122,7 @@ impl Animation {
         if self.frames.len() == 0 {
             0.0
         } else {
-            self.frames[0][3]
+            self.frames[0].h
         }
     }
 
@@ -171,7 +171,7 @@ impl Animation {
         jump
     }
 
-    pub fn draw(&self, transform: Option<Transform>, dest: [f32; 4]) {
+    pub fn draw(&self, transform: Option<Transform>, dest: Rect) {
         let mut current = 0;
         if self.current > 0 {
             current = if self.current == self.frames.len() as i32 {

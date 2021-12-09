@@ -44,7 +44,7 @@ impl GameEngine for Game{
             //在子弹位置创建一个小的爆炸精灵
             let mut frames = vec![];
             for y in (0..136).step_by(17) {
-                frames.push([0., y as f32, 17., 17.]);
+                frames.push(Rect::new(0., y as f32, 17., 17.));
             }
             let anim = Animation::active(self.texture_sm_explosion, frames, 25.0);
 
@@ -84,7 +84,7 @@ async fn main() -> Result<()> {
 
     let mut frames = vec![];
     for y in (0..136).step_by(17) {
-        frames.push([0., y as f32, 33., 17.]);
+        frames.push(Rect::new(0., y as f32, 33., 17.));
     }
     
     let bounds = Rect::new(0.0, 0.0, CLIENT_WIDTH, 410.0);
