@@ -383,4 +383,8 @@ impl Sprite {
     pub fn name(&self) -> &str {
         &self.name
     }
+
+    pub fn set_name<T: Into<String>>(&mut self, name: T){
+        self.name = name.into();
+    }
 }
