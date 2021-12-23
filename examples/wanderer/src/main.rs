@@ -1,4 +1,4 @@
-use mengine_quad::{run, engine::{Resource, GameEngine, Sprite, ScrollingBackground, BackgroundLayer, ScrollDir, BA_STOP}, Animation, State, Settings, Event};
+use mengine_quad::{run, engine::{Resource, GameEngine, Sprite, ScrollingBackground, BackgroundLayer, ScrollDir, BA_STOP}, Animation, State, Settings, Event, Drawable};
 use macroquad::{prelude::*};
 use anyhow::Result;
 
@@ -86,7 +86,7 @@ impl GameEngine for Game{
         &mut self.sprites
     }
 
-    fn sprites(&mut self) -> &Vec<Sprite> {
+    fn sprites(&self) -> &Vec<Sprite> {
         &self.sprites
     }
 
@@ -118,9 +118,9 @@ async fn main() -> Result<()> {
 
     let font = load_ttf_font("static/VonwaonBitmap-16pxLite.ttf").await?;
 
-    let texture_background_clouds = Texture2D::from_image(&load_image("static/Background_Clouds.png").await?);
-    let texture_background_landscape = Texture2D::from_image(&load_image("static/Background_Landscape.png").await?);
-    let texture_persion = Texture2D::from_image(&load_image("static/Person.png").await?);
+    let texture_background_clouds = Drawable::Texture2D(Texture2D::from_image(&load_image("static/Background_Clouds.png").await?));
+    let texture_background_landscape = Drawable::Texture2D(Texture2D::from_image(&load_image("static/Background_Landscape.png").await?));
+    let texture_persion = Drawable::Texture2D(Texture2D::from_image(&load_image("static/Person.png").await?));
     
     //创建滚动背景和风景图层
     let mut background = ScrollingBackground::new();

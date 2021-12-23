@@ -46,13 +46,36 @@ impl AnimationTimer {
     }
 }
 
+/// 绘制对象, 可为空不进行绘制
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum Drawable{
+    Texture2D(Texture2D),
+    None,
+}
+
+impl Drawable{
+    pub fn width(&self) -> f32{
+        match self{
+            &Self::None => 0.,
+            &Self::Texture2D(t) => t.width()
+        }
+    }
+
+    pub fn height(&self) -> f32{
+        match self{
+            &Self::None => 0.,
+            &Self::Texture2D(t) => t.height()
+        }
+    }
+}
+
 pub struct SubImage {
-    image: Texture2D,
+    image: Drawable,
     region: Rect,
 }
 
 impl SubImage {
-    pub fn new(image: Texture2D, region: Rect) -> SubImage {
+    pub fn new(image: Drawable, region: Rect) -> SubImage {
         SubImage { image, region }
     }
 
@@ -64,7 +87,7 @@ impl SubImage {
 #[derive(Clone)]
 pub struct Animation {
     timer: AnimationTimer,
-    image: Texture2D,
+    image: Drawable,
     frames: Vec<Rect>,
     current: i32,
     repeat: bool,
@@ -74,7 +97,7 @@ pub struct Animation {
 }
 
 impl Animation {
-    pub fn new(image: Texture2D, frames: Vec<Rect>, fps: f64) -> Animation {
+    pub fn new(image: Drawable, frames: Vec<Rect>, fps: f64) -> Animation {
         Animation {
             timer: AnimationTimer::new(fps),
             image,
@@ -87,7 +110,7 @@ impl Animation {
         }
     }
 
-    pub fn active(image: Texture2D, frames: Vec<Rect>, fps: f64) -> Animation {
+    pub fn active(image: Drawable, frames: Vec<Rect>, fps: f64) -> Animation {
         let mut anim = Self::new(image, frames, fps);
         anim.start();
         anim

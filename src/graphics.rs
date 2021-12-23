@@ -1,5 +1,7 @@
 use macroquad::prelude::*;
 
+use crate::Drawable;
+
 pub struct Transform {
     pub rotate: f32,
     pub translate: (f32, f32),
@@ -15,32 +17,36 @@ impl Default for Transform {
 
 pub fn draw_image(
     transform: Option<Transform>,
-    image: Texture2D,
+    image: Drawable,
     source: Option<Rect>,
     dest: Option<Rect>,
 ) {
-
-    if source.is_some() || dest.is_some(){
-        let mut params = DrawTextureParams::default();
-
-        params.source = source;
-        let mut x = 0.;
-        let mut y = 0.;
-        if let Some(dest) = dest{
-            x = dest.x;
-            y = dest.y;
-            params.dest_size = Some(vec2(dest.w, dest.h));
-        }
-        if let Some(transform) = transform{
-            if transform.rotate != 0.{
-                params.rotation = transform.rotate;
+    match image{
+        Drawable::None => (),
+        Drawable::Texture2D(image) => {
+            if source.is_some() || dest.is_some(){
+                let mut params = DrawTextureParams::default();
+        
+                params.source = source;
+                let mut x = 0.;
+                let mut y = 0.;
+                if let Some(dest) = dest{
+                    x = dest.x;
+                    y = dest.y;
+                    params.dest_size = Some(vec2(dest.w, dest.h));
+                }
+                if let Some(transform) = transform{
+                    if transform.rotate != 0.{
+                        params.rotation = transform.rotate;
+                    }
+                    x += transform.translate.0;
+                    y += transform.translate.1; 
+                }
+                draw_texture_ex(image, x, y, WHITE, params);
+            }else{
+                draw_texture(image, 0., 0., WHITE);
             }
-            x += transform.translate.0;
-            y += transform.translate.1; 
         }
-        draw_texture_ex(image, x, y, WHITE, params);
-    }else{
-        draw_texture(image, 0., 0., WHITE);
     }
 }
 

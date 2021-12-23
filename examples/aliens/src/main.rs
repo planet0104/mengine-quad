@@ -1,5 +1,5 @@
 use aliens::Timmy;
-use mengine_quad::{run, engine::{Resource, GameEngine, Sprite, BA_WRAP}, Animation, State, Settings, Event};
+use mengine_quad::{run, engine::{Resource, GameEngine, Sprite, BA_WRAP}, Animation, State, Settings, Event, Drawable};
 use macroquad::{prelude::*, audio::{load_sound, Sound, self}};
 use anyhow::Result;
 
@@ -10,7 +10,7 @@ pub const CLIENT_HEIGHT:f32 = 450.0;
 
 pub struct Game{
     sound_explode_missile: Sound,
-    texture_sm_explosion: Texture2D,
+    texture_sm_explosion: Drawable,
     sprites: Vec<Sprite>,
 }
 
@@ -31,7 +31,7 @@ impl GameEngine for Game{
         &mut self.sprites
     }
 
-    fn sprites(&mut self) -> &Vec<Sprite> {
+    fn sprites(&self) -> &Vec<Sprite> {
         &self.sprites
     }
 
@@ -74,9 +74,9 @@ async fn main() -> Result<()> {
     // 加载素材
     draw_text("Loading...", screen_width()/2., screen_height()/2., 20., BLACK);
 
-    let texture_missile = Texture2D::from_image(&load_image("static/TMissile.png").await?);
-    let texture_timmy = Texture2D::from_image(&load_image("static/Timmy.png").await?);
-    let texture_sm_explosion = Texture2D::from_image(&load_image("static/SmExplosion.png").await?);
+    let texture_missile = Drawable::Texture2D(Texture2D::from_image(&load_image("static/TMissile.png").await?));
+    let texture_timmy = Drawable::Texture2D(Texture2D::from_image(&load_image("static/Timmy.png").await?));
+    let texture_sm_explosion = Drawable::Texture2D(Texture2D::from_image(&load_image("static/SmExplosion.png").await?));
     let sound_missile = load_sound("static/TMissile.ogg").await?;
     let sound_explode_missile = load_sound("static/SmExplode.ogg").await?;
     

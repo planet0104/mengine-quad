@@ -1,14 +1,14 @@
-use macroquad::{prelude::{Texture2D, Rect}, audio::{self, Sound}};
-use mengine_quad::{engine::{SpriteExt, SPRITEACTION, SA_ADDSPRITE, Sprite, Resource, BA_DIE}, rand_int, Point};
+use macroquad::{prelude::Rect, audio::{self, Sound}};
+use mengine_quad::{engine::{SpriteExt, SPRITEACTION, SA_ADDSPRITE, Sprite, Resource, BA_DIE}, rand_int, Point, Drawable};
 
 //外星人
 pub struct Timmy {
     pub sound_missile: Sound,
-    pub missile: Texture2D
+    pub missile: Drawable,
 }
 
 impl SpriteExt for Timmy {
-    fn update(&self, sprite_action: SPRITEACTION) -> SPRITEACTION {
+    fn update(&mut self, _:&mut Sprite, sprite_action: SPRITEACTION) -> SPRITEACTION {
         //检查精灵是否要发射子弹
         match rand_int(0, 30) {
             0 => sprite_action | SA_ADDSPRITE,
@@ -17,7 +17,7 @@ impl SpriteExt for Timmy {
         // sprite_action
     }
 
-    fn add_sprite(&self, sprite: &Sprite) -> Sprite {
+    fn add_sprite(&self, sprite: &Sprite) -> Option<Sprite> {
         //创建一个新的子弹精灵
         let bounds = Rect::new(0.0, 0.0, 640.0, 410.0);
         let pos = sprite.position();
@@ -36,6 +36,6 @@ impl SpriteExt for Timmy {
 
         // println!("top={} bottom={}", pos.top(), pos.bottom());
         sub_sprite.set_position(pos.left() + sprite.width() / 2.0, pos.bottom());
-        sub_sprite
+        Some(sub_sprite)
     }
 }

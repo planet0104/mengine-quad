@@ -1,8 +1,11 @@
 use macroquad::prelude::{Rect, vec2};
+use uuid::Uuid;
 use crate::*;
 use std::cmp;
 
 //Sprite主要代码
+
+pub type SpriteID = String;
 
 pub type SPRITEACTION = u32;
 pub const SA_NONE: SPRITEACTION = 0;
@@ -17,12 +20,15 @@ pub const BA_DIE: BOUNDSACTION = 3;
 pub const BA_NONE: BOUNDSACTION = 4;
 
 pub trait SpriteExt {
-    fn add_sprite(&self, sprite: &Sprite) -> Sprite;
-    fn update(&self, sprite_action: SPRITEACTION) -> SPRITEACTION;
+    /// 处理添加精灵事件
+    fn add_sprite(&self, _sprite: &Sprite) -> Option<Sprite>{
+        None
+    }
+    fn update(&mut self, sprite: &mut Sprite, sprite_action: SPRITEACTION) -> SPRITEACTION;
 }
 
 pub enum Resource {
-    Static(Texture2D),
+    Static(Drawable),
     Animation(Animation),
 }
 
@@ -41,6 +47,14 @@ impl Resource {
         }
     }
 
+    pub fn amination<'a>(&'a self) -> Option<&'a Animation>{
+        if let Resource::Animation(anim) = self{
+            Some(anim)
+        }else{
+            None
+        }
+    }
+
     pub fn amination_mut<'a>(&'a mut self) -> Option<&'a mut Animation>{
         if let Resource::Animation(anim) = self{
             Some(anim)
@@ -51,8 +65,16 @@ impl Resource {
 }
 
 pub struct Sprite {
-    id: f64,
+    id: SpriteID,
     name: String,
+    type_name: String,
+    score: i32,
+    lives: i32,
+    parent_id: Option<SpriteID>,
+    killer_id: Option<SpriteID>,
+    rel_id: Option<SpriteID>,
+    rel_id2: Option<SpriteID>,
+    rel_id3: Option<SpriteID>,
     sprite_ext: Option<Box<dyn SpriteExt>>,
     resource: Resource,
     position: Rect,
@@ -75,8 +97,17 @@ impl Sprite {
         bounds: Rect,
         bounds_action: BOUNDSACTION,
     ) -> Sprite {
+        let uuid = Uuid::new_v4();
         let mut sprite = Sprite {
-            id: 0.0,
+            id: uuid.to_string(),
+            type_name: String::new(),
+            lives: 0,
+            score: 0,
+            parent_id: None,
+            killer_id: None,
+            rel_id: None,
+            rel_id2: None,
+            rel_id3: None,
             name,
             sprite_ext: None,
             position: Rect::new(
@@ -94,7 +125,6 @@ impl Sprite {
             dying: false,
             collision: Rect::default(),
         };
-        sprite.id = current_timestamp() + random();
         sprite.calc_collision_rect();
         sprite
     }
@@ -254,8 +284,11 @@ impl Sprite {
 
     pub fn update(&mut self) -> SPRITEACTION {
         let sprite_action = self.sprite_update();
-        match self.sprite_ext.as_ref() {
-            Some(ext) => ext.update(sprite_action),
+        let sprite_ptr = self as *mut Sprite;
+        match self.sprite_ext.as_mut() {
+            Some(ext) =>{
+                ext.update(unsafe{ &mut *sprite_ptr }, sprite_action)
+            },
             _ => sprite_action,
         }
     }
@@ -351,16 +384,49 @@ impl Sprite {
     pub fn ext<T: SpriteExt + 'static>(&mut self, sprite_ext: T) {
         self.sprite_ext = Some(Box::new(sprite_ext));
     }
-
+    
+    /** 添加子精灵，例如爆炸效果、子弹等，需要在SpriteExt中实现，默认不做操作 */
     pub fn add_sprite(&self) -> Option<Sprite> {
         match self.sprite_ext.as_ref() {
-            Some(ext) => Some(ext.add_sprite(self)),
+            Some(ext) => ext.add_sprite(self),
             _ => None,
         }
     }
 
-    pub fn id(&self) -> f64 {
-        self.id
+    pub fn id(&self) -> &str {
+        &self.id
+    }
+
+    pub fn killer(&self) -> Option<&SpriteID>{
+        self.killer_id.as_ref()
+    }
+
+    pub fn set_killer_id(&mut self, killer_id: Option<SpriteID>){
+        self.killer_id = killer_id;
+    }
+
+    pub fn rel_id(&self) -> Option<&SpriteID>{
+        self.rel_id.as_ref()
+    }
+
+    pub fn set_rel_id(&mut self, rel_id: Option<SpriteID>){
+        self.rel_id = rel_id;
+    }
+
+    pub fn rel_id2(&self) -> Option<&SpriteID>{
+        self.rel_id2.as_ref()
+    }
+
+    pub fn set_rel_id2(&mut self, rel_id2: Option<SpriteID>){
+        self.rel_id2 = rel_id2;
+    }
+
+    pub fn rel_id3(&self) -> Option<&String>{
+        self.rel_id3.as_ref()
+    }
+
+    pub fn set_rel_id3(&mut self, rel_id3: Option<SpriteID>){
+        self.rel_id3 = rel_id3;
     }
 
     // pub fn set_num_frames(&mut self, num_frames:i32, one_cycle:bool){
@@ -380,6 +446,14 @@ impl Sprite {
         self.dying
     }
 
+    pub fn parent(&self) -> Option<&SpriteID>{
+        self.parent_id.as_ref()
+    }
+
+    pub fn set_parent(&mut self, parent_id: Option<SpriteID>){
+        self.parent_id = parent_id;
+    }
+
     pub fn name(&self) -> &str {
         &self.name
     }
@@ -390,5 +464,37 @@ impl Sprite {
 
     pub fn set_bounds_action(&mut self, bounds_action: BOUNDSACTION){
         self.bounds_action = bounds_action;
+    }
+
+    pub fn add_score(&mut self, v: i32){
+        self.score += v;
+    }
+
+    pub fn score(&self) -> i32{
+        self.score
+    }
+
+    pub fn type_name(&self) -> &str{
+        &self.type_name
+    }
+
+    pub fn set_type_name<T: Into<String>>(&mut self, type_name:T){
+        self.type_name = type_name.into();
+    }
+
+    pub fn lives(&self) -> i32{
+        self.lives
+    }
+
+    pub fn add_lives(&mut self, v: i32){
+        self.lives += v;
+    }
+
+    pub fn set_lives(&mut self, lives: i32){
+        self.lives = lives;
+    }
+
+    pub fn set_id(&mut self, id: String){
+        self.id = id;
     }
 }

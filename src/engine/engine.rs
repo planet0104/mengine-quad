@@ -3,7 +3,7 @@ use super::sprite::{Sprite, SA_ADDSPRITE, SA_KILL};
 //GameEngine 负责创建游戏窗口、绘制和更新精灵
 pub trait GameEngine {
     fn sprites_mut(&mut self) -> &mut Vec<Sprite>;
-    fn sprites(&mut self) -> &Vec<Sprite>;
+    fn sprites(&self) -> &Vec<Sprite>;
     fn sprite_dying(&mut self, sprite_dying_id: usize);
     fn sprite_collision(&mut self, sprite_hitter_id: usize, sprite_hittee_id: usize) -> bool;
 
@@ -32,7 +32,7 @@ pub trait GameEngine {
     fn update_sprites(&mut self) {
         let sprites_num = self.sprites().len();
         //更新所有精灵
-        let mut sprites_to_kill: Vec<f64> = vec![];
+        let mut sprites_to_kill: Vec<String> = vec![];
         for i in 0..sprites_num {
             //保存旧的精灵位置以防需要恢复
             let old_sprite_pos = *self.sprites()[i].position();
@@ -52,7 +52,7 @@ pub trait GameEngine {
                 //通知游戏精灵死亡
                 self.sprite_dying(i);
                 //杀死精灵
-                sprites_to_kill.push(self.sprites()[i].id());
+                sprites_to_kill.push(self.sprites()[i].id().to_string());
                 continue;
             }
 
@@ -96,13 +96,42 @@ pub trait GameEngine {
         None
     }
 
-    fn get_sprite(&mut self, id: f64) -> Option<&mut Sprite> {
+    fn get_sprite(&mut self, id: &str) -> Option<&mut Sprite> {
         for sprite in self.sprites_mut() {
             if sprite.id() == id {
                 return Some(sprite);
             }
         }
         None
+    }
+
+    fn index_of_sprite(&self, id:&str) -> Option<usize>{
+        for (idx, sprite) in self.sprites().iter().enumerate() {
+            if sprite.id() == id {
+                return Some(idx);
+            }
+        }
+        None
+    }
+
+    fn contains_sprite(&mut self, id: &str) -> bool {
+        for sprite in self.sprites_mut() {
+            if sprite.id() == id {
+                return true;
+            }
+        }
+        false
+    }
+
+    fn sprite_mut(&mut self, id: &str) -> &mut Sprite{
+        let mut s = None;
+        for sprite in self.sprites_mut() {
+            if sprite.id() == id {
+                s.replace(sprite);
+                break;
+            }
+        }
+        s.expect(&format!("Sptite 不存在: {}", id))
     }
 
     fn initialize(&mut self) -> bool {

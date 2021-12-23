@@ -45,11 +45,11 @@ pub struct BackgroundLayer {
     viewport: Rect,
     speed: f32,
     direction: ScrollDir,
-    bitmap: Texture2D,
+    bitmap: Drawable,
 }
 
 impl BackgroundLayer {
-    pub fn new(bitmap: Texture2D, viewport: Rect, speed: f32, direction: ScrollDir) -> BackgroundLayer {
+    pub fn new(bitmap: Drawable, viewport: Rect, speed: f32, direction: ScrollDir) -> BackgroundLayer {
         BackgroundLayer {
             speed,
             direction,

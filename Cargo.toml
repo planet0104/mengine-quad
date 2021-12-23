@@ -9,3 +9,4 @@ macroquad = "0.3.10"
 quad-snd = "0.2.3"
 # nsvg = "0.5.1"
 anyhow = "1"
+uuid = { version = "1.0.0-alpha.1", features = ["v4", "js"] }
