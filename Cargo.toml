@@ -1,6 +1,6 @@
 [package]
 name = "mengine-quad"
-version = "0.6.7"
+version = "0.6.8"
 authors = ["planet0104 <planet0104@gmail.com>"]
 edition = "2021"
 
@@ -9,4 +9,3 @@ macroquad = "0.3.10"
 quad-snd = "0.2.3"
 # nsvg = "0.5.1"
 anyhow = "1"
-uuid = { version = "1.0.0-alpha.1", features = ["v4", "js"] }

@@ -1,5 +1,4 @@
 use macroquad::prelude::{Rect, vec2};
-use uuid::Uuid;
 use crate::*;
 use std::cmp;
 
@@ -89,6 +88,7 @@ pub struct Sprite {
 
 impl Sprite {
     pub fn new(
+        id: String,
         name: String,
         resource: Resource,
         position: Point,
@@ -97,9 +97,8 @@ impl Sprite {
         bounds: Rect,
         bounds_action: BOUNDSACTION,
     ) -> Sprite {
-        let uuid = Uuid::new_v4();
         let mut sprite = Sprite {
-            id: uuid.to_string(),
+            id,
             type_name: String::new(),
             lives: 0,
             score: 0,
@@ -129,8 +128,9 @@ impl Sprite {
         sprite
     }
 
-    pub fn from_bitmap(name: String, resource: Resource, bounds: Rect) -> Sprite {
+    pub fn from_bitmap(id: String, name: String, resource: Resource, bounds: Rect) -> Sprite {
         Sprite::new(
+            id,
             name,
             resource,
             Point { x: 0.0, y: 0.0 },
@@ -142,6 +142,7 @@ impl Sprite {
     }
 
     pub fn with_bounds_action(
+        id: String,
         name: String,
         resource: Resource,
         bounds: Rect,
@@ -151,6 +152,7 @@ impl Sprite {
         let x_pos = rand_int(0, (bounds.right() - bounds.left()) as i32);
         let y_pos = rand_int(0, (bounds.bottom() - bounds.top()) as i32);
         Sprite::new(
+            id,
             name,
             resource,
             Point {
