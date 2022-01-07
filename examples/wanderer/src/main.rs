@@ -1,4 +1,4 @@
-use mengine_quad::{run, engine::{Resource, GameEngine, Sprite, ScrollingBackground, BackgroundLayer, ScrollDir, BA_STOP}, Animation, State, Settings, Event, Drawable};
+use mengine_quad::{run, engine::{Resource, GameEngine, Sprite, ScrollingBackground, BackgroundLayer, ScrollDir, BA_STOP}, Animation, State, Settings, Event, Drawable, rand_uuid};
 use macroquad::{prelude::*};
 use anyhow::Result;
 
@@ -155,7 +155,7 @@ async fn main() -> Result<()> {
     anim.stop();
     
     let mut person = Sprite::with_bounds_action(
-        uuid::Uuid::new_v4().to_string(),
+        rand_uuid(),
         String::from("timmy"),
         Resource::Animation(anim),
         Rect::new(115.0, 112.0, 26.0, 32.0),

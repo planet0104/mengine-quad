@@ -1,6 +1,6 @@
 [package]
 name = "mengine-quad"
-version = "0.7.1"
+version = "0.7.2"
 authors = ["planet0104 <planet0104@gmail.com>"]
 edition = "2021"
 

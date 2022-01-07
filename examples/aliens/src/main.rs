@@ -1,5 +1,5 @@
 use aliens::Timmy;
-use mengine_quad::{run, engine::{Resource, GameEngine, Sprite, BA_WRAP}, Animation, State, Settings, Event, Drawable, current_timestamp};
+use mengine_quad::{run, engine::{Resource, GameEngine, Sprite, BA_WRAP}, Animation, State, Settings, Event, Drawable, rand_uuid};
 use macroquad::{prelude::*, audio::{load_sound, Sound, self}};
 use anyhow::Result;
 
@@ -49,7 +49,7 @@ impl GameEngine for Game{
             let anim = Animation::active(self.texture_sm_explosion, frames, 25.0);
 
             let mut sprite = Sprite::from_bitmap(
-                format!("{}", current_timestamp()),
+                rand_uuid(),
                 String::from("sm_explosion"),
                 Resource::Animation(anim),
                 Rect::new(0.0, 0.0, CLIENT_WIDTH, CLIENT_HEIGHT),
@@ -95,7 +95,7 @@ async fn main() -> Result<()> {
     anim.set_repeat(true);
     
     let mut alien = Sprite::with_bounds_action(
-        format!("{}", current_timestamp()),
+        rand_uuid(),
         String::from("timmy"),
         Resource::Animation(anim),
         bounds,

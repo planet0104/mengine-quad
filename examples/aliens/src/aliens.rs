@@ -1,7 +1,5 @@
-use std::fmt::format;
-
 use macroquad::{prelude::Rect, audio::{self, Sound}};
-use mengine_quad::{engine::{SpriteExt, SPRITEACTION, SA_ADDSPRITE, Sprite, Resource, BA_DIE}, rand_int, Point, Drawable, current_timestamp};
+use mengine_quad::{engine::{SpriteExt, SPRITEACTION, SA_ADDSPRITE, Sprite, Resource, BA_DIE}, rand_int, Point, Drawable, rand_uuid};
 
 //外星人
 pub struct Timmy {
@@ -26,7 +24,7 @@ impl SpriteExt for Timmy {
         let velocity = Point { x: 0.0, y: 3.0 };
 
         let mut sub_sprite = Sprite::with_bounds_action(
-            format!("{:?}", buf),
+            rand_uuid(),
             String::from("missile"),
             Resource::Static(self.missile),
             bounds,

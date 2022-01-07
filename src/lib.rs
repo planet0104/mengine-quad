@@ -1,7 +1,7 @@
 pub mod graphics;
 pub mod engine;
 use graphics::{Transform, draw_text};
-use macroquad::{prelude::{Texture2D, rand, Rect, screen_width, screen_height, Color, Vec2, BLACK, draw_rectangle, vec2, get_fps, next_frame, KeyCode}, miniquad::date, camera::{set_camera, set_default_camera, Camera2D}, rand::srand};
+use macroquad::{prelude::{Texture2D, rand, Rect, screen_width, screen_height, Color, Vec2, BLACK, draw_rectangle, vec2, next_frame, KeyCode}, miniquad::date, camera::{set_camera, set_default_camera, Camera2D}, rand::srand};
 
 #[derive(Debug)]
 pub enum Event {
@@ -511,19 +511,12 @@ pub fn rand_int(l: i32, b: i32) -> i32 {
     rand::gen_range(l, b)
 }
 
-fn sgen_range(low: , high: Self) -> Self {
-    let r = srand() as f32 / std::u32::MAX as f32;
-    let r = low as f32 + (high as f32 - low as f32) * r;
-    r as u8
-}
-
 const RAND_CHARS:&[u8] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".as_bytes();
 
 /// 随机字符串
 pub fn rand_str(len: usize) -> String{
     let mut str = String::new();
     for _ in 0..len{
-        macroquad::rand::srand(seed)
         let idx = macroquad::rand::gen_range(0, RAND_CHARS.len());
         str.push(RAND_CHARS[idx] as char);
     }
@@ -532,7 +525,7 @@ pub fn rand_str(len: usize) -> String{
 
 /// 32位UUID
 pub fn rand_uuid() -> String{
-    let mut str = format!("{}", (date::now()*10000000.) as u64);
+    let mut str = format!("{}-", (date::now()*10000000.) as u64);
     let len = 32 - str.len();
     str.push_str(&rand_str(len));
     str
@@ -550,11 +543,35 @@ pub fn current_timestamp() -> f64{
 
 pub async fn run<T: State>(state: &mut T, width: f32, height: f32, settings: Settings) {
 
+    //初始化随机数种子
+    srand((date::now()*10000000.) as u64);
+
     let background_color = settings.background_color.unwrap_or(BLACK);
     let (auto_scale, draw_center) = (settings.auto_scale, settings.draw_center);
-    
+
+    // 更新频率
+    let mut update_timer = AnimationTimer::new(settings.ups as f64);
+    // 1秒钟更新一次帧率
+    let mut update_fps_timer = AnimationTimer::new(1.);
+    let mut update_count = 0;
+    let mut frame_count = 0;
+    let mut ups = 0;
+    let mut fps = 0;
     loop {
-        state.update();
+        //按帧率更新
+        if update_timer.ready_for_next_frame(){
+            state.update();
+            update_count += 1;
+        }
+        frame_count += 1;
+
+        if update_fps_timer.ready_for_next_frame(){
+            ups = update_count;
+            fps = frame_count;
+            frame_count = 0;
+            update_count = 0;
+        }
+        
         let (window_width, window_height) = (screen_width(), screen_height());
 
         // draw_rectangle(0., 0., window_width, window_height, background_color);
@@ -597,7 +614,7 @@ pub async fn run<T: State>(state: &mut T, width: f32, height: f32, settings: Set
         //显示UPS/FPS
         if settings.show_ups_fps {
             let _ = draw_text(
-                &format!("FPS:{}", get_fps(),),
+                &format!("FPS:{} UPS:{}", fps, ups),
                 20.,
                 height - 30.,
                 &[255, 255, 0, 200],
@@ -640,6 +657,7 @@ pub trait State{
 
 #[test]
 fn test(){
+    srand((date::now()*10000000.) as u64);
     for _ in 0..10{
         println!("{}", rand_uuid())
     }

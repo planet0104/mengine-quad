@@ -9,7 +9,3 @@ edition = "2021"
 mengine-quad = { path = "../../" }
 macroquad = "0.3.13"
 anyhow = "1"
-
-[dependencies.uuid]
-version = "1.0.0-alpha.1"
-features = ["v4", "fast-rng"]
