@@ -1,7 +1,7 @@
 pub mod graphics;
 pub mod engine;
 use graphics::{Transform, draw_text};
-use macroquad::{prelude::{Texture2D, rand, Rect, screen_width, screen_height, Color, Vec2, BLACK, draw_rectangle, vec2, get_fps, next_frame, KeyCode}, miniquad::date, camera::{set_camera, set_default_camera, Camera2D}};
+use macroquad::{prelude::{Texture2D, rand, Rect, screen_width, screen_height, Color, Vec2, BLACK, draw_rectangle, vec2, get_fps, next_frame, KeyCode}, miniquad::date, camera::{set_camera, set_default_camera, Camera2D}, rand::srand};
 
 #[derive(Debug)]
 pub enum Event {
@@ -511,6 +511,33 @@ pub fn rand_int(l: i32, b: i32) -> i32 {
     rand::gen_range(l, b)
 }
 
+fn sgen_range(low: , high: Self) -> Self {
+    let r = srand() as f32 / std::u32::MAX as f32;
+    let r = low as f32 + (high as f32 - low as f32) * r;
+    r as u8
+}
+
+const RAND_CHARS:&[u8] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".as_bytes();
+
+/// 随机字符串
+pub fn rand_str(len: usize) -> String{
+    let mut str = String::new();
+    for _ in 0..len{
+        macroquad::rand::srand(seed)
+        let idx = macroquad::rand::gen_range(0, RAND_CHARS.len());
+        str.push(RAND_CHARS[idx] as char);
+    }
+    str
+}
+
+/// 32位UUID
+pub fn rand_uuid() -> String{
+    let mut str = format!("{}", (date::now()*10000000.) as u64);
+    let len = 32 - str.len();
+    str.push_str(&rand_str(len));
+    str
+}
+
 /// 膨胀
 pub fn inflate(rect: &Rect, dx: f32, dy: f32) -> Rect {
     Rect::new(rect.x - dx, rect.y - dy, rect.w + dx + dx, rect.h + dy + dy)
@@ -609,4 +636,11 @@ pub trait State{
     fn event(&mut self, _event: Event);
     fn update(&mut self);
     fn draw(&mut self);
+}
+
+#[test]
+fn test(){
+    for _ in 0..10{
+        println!("{}", rand_uuid())
+    }
 }
