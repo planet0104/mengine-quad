@@ -155,6 +155,7 @@ async fn main() -> Result<()> {
     anim.stop();
     
     let mut person = Sprite::with_bounds_action(
+        uuid::Uuid::new_v4().to_string(),
         String::from("timmy"),
         Resource::Animation(anim),
         Rect::new(115.0, 112.0, 26.0, 32.0),

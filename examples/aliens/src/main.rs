@@ -49,6 +49,7 @@ impl GameEngine for Game{
             let anim = Animation::active(self.texture_sm_explosion, frames, 25.0);
 
             let mut sprite = Sprite::from_bitmap(
+                uuid::Uuid::new_v4().to_string(),
                 String::from("sm_explosion"),
                 Resource::Animation(anim),
                 Rect::new(0.0, 0.0, CLIENT_WIDTH, CLIENT_HEIGHT),
@@ -94,6 +95,7 @@ async fn main() -> Result<()> {
     anim.set_repeat(true);
     
     let mut alien = Sprite::with_bounds_action(
+        uuid::Uuid::new_v4().to_string(),
         String::from("timmy"),
         Resource::Animation(anim),
         bounds,

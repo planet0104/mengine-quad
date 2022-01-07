@@ -24,6 +24,7 @@ impl SpriteExt for Timmy {
         let velocity = Point { x: 0.0, y: 3.0 };
 
         let mut sub_sprite = Sprite::with_bounds_action(
+            uuid::Uuid::new_v4().to_string(),
             String::from("missile"),
             Resource::Static(self.missile),
             bounds,

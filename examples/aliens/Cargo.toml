@@ -6,5 +6,9 @@ edition = "2018"
 
 [dependencies]
 mengine-quad = { path = "../../" }
-macroquad = "0.3.10"
+macroquad = "0.3.13"
 anyhow = "1"
+
+[dependencies.uuid]
+version = "1.0.0-alpha.1"
+features = ["v4", "fast-rng"]
